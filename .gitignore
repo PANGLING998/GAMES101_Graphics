@@ -35,3 +35,6 @@
 *.exe
 *.out
 *.app
+
+#Debug
+x64
