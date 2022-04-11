@@ -39,9 +39,32 @@ auto to_vec4(const Eigen::Vector3f& v3, float w = 1.0f)
     return Vector4f(v3.x(), v3.y(), v3.z(), w);
 }
 
-
-static bool insideTriangle(int x, int y, const Vector3f* _v)
+//此时三角形已经投影到屏幕上
+static bool insideTriangle(float x, float y, const Vector3f* v)
 {
+    Vector3f p;
+    p << x, y, 0;
+    Vector3f a = v[0];
+    Vector3f b = v[1];
+    Vector3f c = v[2];  
+    Vector3f ab = b - a;
+    Vector3f bc = c - b;
+    Vector3f ca = a - c;
+    Vector3f ap = p - a;
+    Vector3f bp = p - b;
+    Vector3f cp = p - c;
+
+    float t1 = ab.cross(ap).z();
+    float t2 = bc.cross(bp).z();
+    float t3 = ca.cross(cp).z();
+
+    if ((t1 >= 0 && t2 >= 0 && t3 >= 0) || (t1 <= 0 && t2 <= 0 && t3 <= 0)) {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
     // TODO : Implement this function to check if the point (x, y) is inside the triangle represented by _v[0], _v[1], _v[2]
 }
 
@@ -75,7 +98,7 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
         for (auto& vec : v) {
             vec /= vec.w();
         }
-        //Viewport transformation
+        //Viewport transformation视口变换
         for (auto& vert : v)
         {
             vert.x() = 0.5 * width * (vert.x() + 1.0);

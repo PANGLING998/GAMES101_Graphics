@@ -29,8 +29,4 @@ public:
 };
 
 
-
-
-
-
 #endif //RASTERIZER_TRIANGLE_H
