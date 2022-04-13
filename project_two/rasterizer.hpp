@@ -65,7 +65,7 @@ namespace rst
         void set_model(const Eigen::Matrix4f& m);
         void set_view(const Eigen::Matrix4f& v);
         void set_projection(const Eigen::Matrix4f& p);
-
+        //将屏幕像素点 (x, y) 设 为 (r, g, b) 的颜色，并写入相应的帧缓冲区位置
         void set_pixel(const Eigen::Vector3f& point, const Eigen::Vector3f& color);
 
         void clear(Buffers buff);
@@ -90,6 +90,7 @@ namespace rst
         std::map<int, std::vector<Eigen::Vector3i>> ind_buf;
         std::map<int, std::vector<Eigen::Vector3f>> col_buf;
 
+        //帧缓冲对象，用于存储需要在屏幕上绘制的颜色数据
         std::vector<Eigen::Vector3f> frame_buf;
 
         std::vector<float> depth_buf;
