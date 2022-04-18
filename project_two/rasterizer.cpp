@@ -134,12 +134,15 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
     float min_y = std::floor(std::min(v[0].y(), std::min(v[1].y(), v[2].y())));
     float max_y = std::ceil(std::max(v[0].y(), std::max(v[1].y(), v[2].y())));
     // iterate through the pixel and find if the current pixel is inside the triangle
-    
-    for (float x = min_x; x <= max_x; x+=0.5) {
+    std::cout << v[0].x() << "--" << v[0].y() << "--"<< v[0].z() <<std::endl;
+    std::cout << v[1].x() << "--" << v[1].y() << "--"<< v[1].z() <<std::endl;
+    std::cout << v[2].x() << "--" << v[2].y() << "--"<< v[2].z() <<std::endl;
+    for (float x = min_x; x <= max_x; x+=1) {
 
-        for (float y = min_y; y <= max_y; y+=0.5) {
-
+        for (float y = min_y; y <= max_y; y+=1) {
+            
             if (insideTriangle(x, y, t.v)) {
+                
                 // If so, use the following code to get the interpolated z value. 
 
                 auto res = computeBarycentric2D(x, y, t.v);
@@ -153,7 +156,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                 auto ind = get_index(x, y);
                 if (std::isinf(depth_buf[ind]) || depth_buf[ind] < z_interpolated) {
                     depth_buf[ind] = z_interpolated;
-                    Vector3f point = Vector3f(x, y, 0);
+                    Vector3f point = Vector3f(x, y, z_interpolated);
                     set_pixel(point, t.getColor());
                 }
             }
