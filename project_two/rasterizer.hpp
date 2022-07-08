@@ -28,6 +28,7 @@ namespace rst
         return Buffers((int)a & (int)b);
     }
 
+    //画线还是三角形，作业二画三角形
     enum class Primitive
     {
         Line,
@@ -86,13 +87,17 @@ namespace rst
         Eigen::Matrix4f view;
         Eigen::Matrix4f projection;
 
+        //储存顶点
         std::map<int, std::vector<Eigen::Vector3f>> pos_buf;
+        //储存索引
         std::map<int, std::vector<Eigen::Vector3i>> ind_buf;
+
         std::map<int, std::vector<Eigen::Vector3f>> col_buf;
 
         //帧缓冲对象，用于存储需要在屏幕上绘制的颜色数据
         std::vector<Eigen::Vector3f> frame_buf;
 
+        //z-buffer
         std::vector<float> depth_buf;
         int get_index(int x, int y);
 

@@ -61,34 +61,38 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
 int main(int argc, const char** argv)
 {
     float angle = 0;
-    bool command_line = false;
+    bool command_line = false;//定义命令行开关标志，默认为关
     std::string filename = "output.png";
 
+    //接收到的参数大于三个，即检测到通过命令行传入参数时
     if (argc >= 3) {
         command_line = true;
+        //从命令行获取角度参数
         angle = std::stof(argv[2]); // -r by default
         if (argc == 4) {
+            //接收到的参数为四个，那么说明命令行输入了文件名参数
             filename = std::string(argv[3]);
         }
         else
             return 0;
     }
 
-    rst::rasterizer r(700, 700);
+    rst::rasterizer r(700, 700);//设定700*700像素的光栅器视口
 
-    Eigen::Vector3f eye_pos = { 0, 0, 5 };
+    Eigen::Vector3f eye_pos = { 0, 0, 5 };//设定相机位置
 
     std::vector<Eigen::Vector3f> pos{ {2, 0, -2}, {0, 2, -2}, {-2, 0, -2} };
-
+    //设定三顶点序号,用于画图时确定需要处理几个顶点，这里表示的是三个顶点
     std::vector<Eigen::Vector3i> ind{ {0, 1, 2} };
 
     auto pos_id = r.load_positions(pos);
     auto ind_id = r.load_indices(ind);
-
+    //键盘输入
     int key = 0;
-    int frame_count = 0;
-
+    int frame_count = 0;//帧序号
+    //如果命令行开关标志为开（这一段if代码是为了应用命令行传入的参数，比如初始角度和文件名
     if (command_line) {
+        //初始化帧缓存和深度缓存
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
         r.set_model(get_model_matrix(angle));
@@ -103,7 +107,7 @@ int main(int argc, const char** argv)
 
         return 0;
     }
-
+    //只要没有检测到按下ESC就循环(ESC的ASCII码是27)
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 

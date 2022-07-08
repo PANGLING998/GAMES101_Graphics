@@ -1,7 +1,6 @@
 //
 // Created by LEI XU on 4/11/19.
 //
-
 #ifndef RASTERIZER_TRIANGLE_H
 #define RASTERIZER_TRIANGLE_H
 
@@ -28,8 +27,7 @@ public:
 	void setVertex(int ind, Vector3f ver); /*set i-th vertex coordinates */
 	void setNormal(int ind, Vector3f n);   /*set i-th vertex normal vector*/
 	void setColor(int ind, float r, float g, float b); /*set i-th vertex color*/
-	void setTexCoord(int ind, float s,
-		float t); /*set i-th vertex texture coordinate*/
+	void setTexCoord(int ind, float s, float t); /*set i-th vertex texture coordinate*/
 	std::array<Vector4f, 3> toVector4() const;
 };
 

@@ -13,6 +13,7 @@
 rst::pos_buf_id rst::rasterizer::load_positions(const std::vector<Eigen::Vector3f>& positions)
 {
     auto id = get_next_id();
+    //在id指向的元素前创建一个值为positions的元素
     pos_buf.emplace(id, positions);
 
     return { id };
@@ -78,6 +79,7 @@ static std::tuple<float, float, float> computeBarycentric2D(float x, float y, co
 
 void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf_id col_buffer, Primitive type)
 {
+    //取出数据
     auto& buf = pos_buf[pos_buffer.pos_id];
     auto& ind = ind_buf[ind_buffer.ind_id];
     auto& col = col_buf[col_buffer.col_id];
@@ -137,14 +139,14 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
     std::cout << v[0].x() << "--" << v[0].y() << "--"<< v[0].z() <<std::endl;
     std::cout << v[1].x() << "--" << v[1].y() << "--"<< v[1].z() <<std::endl;
     std::cout << v[2].x() << "--" << v[2].y() << "--"<< v[2].z() <<std::endl;
-    for (float x = min_x; x <= max_x; x+=1) {
+    for (float x = min_x; x <= max_x; x++) {
 
-        for (float y = min_y; y <= max_y; y+=1) {
+        for (float y = min_y; y <= max_y; y++) {
             
-            if (insideTriangle(x, y, t.v)) {
+            if (insideTriangle(x+0.5, y+0.5, t.v)) {
                 
                 // If so, use the following code to get the interpolated z value. 
-
+                //计算计算当前位置处的插值深度值
                 auto res = computeBarycentric2D(x, y, t.v);
                 float alpha = std::get < 0 >(res);
                 float beta = std::get < 1 >(res);
@@ -154,6 +156,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                 z_interpolated *= w_reciprocal;
 
                 auto ind = get_index(x, y);
+                // 将当前的深度值与深度缓冲区中的相应值进行比较
                 if (std::isinf(depth_buf[ind]) || depth_buf[ind] < z_interpolated) {
                     depth_buf[ind] = z_interpolated;
                     Vector3f point = Vector3f(x, y, z_interpolated);
@@ -197,10 +200,12 @@ void rst::rasterizer::clear(rst::Buffers buff)
 
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 {
+    //初始化大小，屏幕像素数量
     frame_buf.resize(w * h);
     depth_buf.resize(w * h);
 }
 
+//返回每个像素对应的索引
 int rst::rasterizer::get_index(int x, int y)
 {
     return (height - 1 - y) * width + x;
